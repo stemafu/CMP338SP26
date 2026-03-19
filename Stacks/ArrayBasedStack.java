@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.Vector;
 /*
  * A Stack is a data structures that follows the Last In First Out Principle.
  * This means the last item to be added to the stack is the first
@@ -36,8 +37,38 @@ public class ArrayBasedStack <E> implements StackInterface<E>{
 
 	@Override
 	public Iterator<E> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Vector<E> vector = new Vector<E>(this.numElements);
+		
+		// Copy values from the stack into the vector
+		
+		/*
+		 *  After that, I will pass this vector as a parameter 
+		 *  to a constructor of a custom iterator.
+		 *  
+		 *  A custom iterator will be an iterator that we create
+		 *  by ourselves.
+		 *  
+		 *  The iterator will allow us to step through values inside 
+		 *  the vector one at a time.
+		 *  
+		 *  
+		 */
+		//int count = this.numElements - 1;
+		
+		
+		for(int i = this.numElements - 1; i >= 0; i--) {
+			vector.add(   (E)this.elements[i]   );
+		}
+		
+		//System.out.println(this.elements[count]);
+		
+		
+		CustomIterator<E> iterator = new CustomIterator<E>(vector);
+		
+		
+	
+		return iterator;
 	}
 
 	@Override
@@ -110,14 +141,21 @@ public class ArrayBasedStack <E> implements StackInterface<E>{
 	public static void main(String [] args) {
 		ArrayBasedStack<Integer> stack = new ArrayBasedStack<Integer>();
 		
-		for(int i = 0; i < 10; i++) {
+		for(int i = 1; i <= 10; i++) {
 			stack.push(i);
 		}
 		
+		Iterator<Integer> it = stack.iterator();
 		
-		for(int i = 0; i < 10; i++) {
-			System.out.println(stack.pop());
+		
+		while(it.hasNext()) {
+			System.out.println(it.next());
 		}
+		
+		
+		//for(int i = 0; i < 10; i++) {
+		//	System.out.println(stack.pop());
+		//}
 	}
 
 }
