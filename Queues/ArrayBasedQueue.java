@@ -7,31 +7,31 @@ public class ArrayBasedQueue <E> implements QueueInterface<E>{
 	private int size;
 	private int front;
 	private int back;
-	
+
 	public ArrayBasedQueue(){
 		elements = new Object[CAPACITY];
 		size = 0;
 		front = -1;
 		back = -1;
-		
+
 	}
-	
-	
+
+
 	@Override
 	public Iterator<E> iterator() {
-		
+
 		return null;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		
+
 		return (this.size == 0);
 	}
 
 	@Override
 	public int size() {
-		
+
 		return this.size;
 	}
 
@@ -43,16 +43,16 @@ public class ArrayBasedQueue <E> implements QueueInterface<E>{
 
 	@Override
 	public void enqueue(E element) throws IllegalStateException, NullPointerException {
-		
+
 		if(element == null) {
 			throw new NullPointerException("Element cannot be null");
 		}
-		
+
 		if(this.size == this.elements.length) {
 			throw new IllegalStateException("The queue is full and cannot add a new element");
 		}
-		
-		
+
+
 		if(this.isEmpty()) {
 			this.back = 0;
 			this.front = 0;
@@ -64,12 +64,12 @@ public class ArrayBasedQueue <E> implements QueueInterface<E>{
 			this.back++;
 			this.size++;
 		}
-		
+
 	}
 
 	@Override
 	public E peek() {
-		
+
 		if(this.isEmpty()) {
 			return null;
 		}
@@ -78,27 +78,47 @@ public class ArrayBasedQueue <E> implements QueueInterface<E>{
 
 	@Override
 	public E dequeue() {
-		
+
 		if(this.isEmpty()) {
 			return null;
 		}
-		
+
 		E removedElement = this.peek();
-		
+
 		this.size--;
 		this.front++;
-		
+
 		return removedElement;
 	}
 
 	@Override
 	public E dequeue(int index) throws NoSuchElementException {
-		
+
 		if (index < 0 || index >= this.size) {
 			throw new NoSuchElementException("Bad index");
 		}
-		
-		return null;
+
+
+
+		if(this.size == 1 || index == this.size -1) {
+
+			return this.dequeue();
+		}
+		else {
+			E removedElement = null;
+
+			removedElement = (E)this.elements[index];
+
+			for(int i = index; i < this.size - 1; i++) {
+				this.elements[i] = this.elements[i + 1];
+			}
+
+			this.size--;
+
+
+			return removedElement;
+
+		}
 	}
 
 	@Override
@@ -108,8 +128,8 @@ public class ArrayBasedQueue <E> implements QueueInterface<E>{
 		size = 0;
 		front = -1;
 		back = -1;
-		
-		
+
+
 	}
 
 }
