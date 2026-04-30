@@ -6,6 +6,7 @@ public class TreeNode
 	
 	private TreeNode<E, K> leftChild;
 	private TreeNode<E, K> rightChild;
+	private TreeNode<E, K> parent;
 	
 	
 	
@@ -13,8 +14,17 @@ public class TreeNode
 		this.element = element;
 		this.leftChild = null;
 		this.rightChild = null;
+		this.parent = null;
 	}
 
+	
+	public void setParent(TreeNode<E, K> parent) {
+		this.parent = parent;
+	}
+	
+	public TreeNode<E, K> getParent(){
+		return this.parent;
+	}
 
 
 	public E getElement() {
