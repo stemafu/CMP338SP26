@@ -275,7 +275,7 @@ implements BinarySearchTreeInterface<E, K>
 				 * then this left child becomes the root of the tree.
 				 */
 				
-				this.root = parentOfNodeToDeleted.getLeftChild();
+				this.root = nodeToBeDeleted.getLeftChild();
 				this.root.setParent(null); // the root has not parent
 			}else if(this.isNodeLeftChildOfParent(nodeToBeDeleted, parentOfNodeToDeleted)) {
 				parentOfNodeToDeleted.setLeftChild(nodeToBeDeleted.getLeftChild());
@@ -284,21 +284,99 @@ implements BinarySearchTreeInterface<E, K>
 				parentOfNodeToDeleted.setRightChild(nodeToBeDeleted.getLeftChild());
 				nodeToBeDeleted.getLeftChild().setParent(parentOfNodeToDeleted);
 			}
-
+		} //node with left child only end here
+		else if (this.nodeHasRightChildOnly(nodeToBeDeleted)) {
+			
+			if (parentOfNodeToDeleted == null) {
+				/*
+				 * This means we are deleting the root node.
+				 */
+				this.root = nodeToBeDeleted.getRightChild();
+				this.root.setParent(null);
+			}else if (this.isNodeLeftChildOfParent(nodeToBeDeleted, parentOfNodeToDeleted)){
+				parentOfNodeToDeleted.setLeftChild(nodeToBeDeleted.getRightChild());
+				nodeToBeDeleted.getRightChild().setParent(parentOfNodeToDeleted);
+			}else {
+				/*
+				 * Here we want to attach the right child of the
+				 * node to be deleted, which is also the only child
+				 * of the node to be deleted), as the right child
+				 * of parent of the node to be
+				 * deleted.
+				 * 
+				 * 
+				 * 
+				 */
+				parentOfNodeToDeleted.setRightChild(nodeToBeDeleted.getRightChild());
 				
-		
+				nodeToBeDeleted.getRightChild().setParent(parentOfNodeToDeleted);
+				
+			}
+		}// This is end of right child only
+		else {
+			//This would be for deleting a node with 2 children
+			/*TreeNode <E, K> successorNode = nodeToBeDeleted.getRightChild();
+			
+			while(successorNode.getLeftChild() != null) {
+				successorNode = successorNode.getLeftChild();
+			}*/
+			
+			
+			TreeNode <E, K> successorNode  = this.findSuccessor(nodeToBeDeleted);
+			// We need to find the node to be deleted
+			
+			
+			/*
+			 * Once we find the successor, we have to 
+			 * take the key(value) that is at the successor node
+			 * and place at the node to be deleted.
+			 * 
+			 * Now, it is the successor node that will have to be 
+			 * deleted. The successor will always be at the 
+			 * leaf node or a node with one child only in BST.
+			 */
+			
+			this.deleteNode(successorNode);
+			
 		}
 	}
 	
+	public void inOrder() {
+		inOrder(this.root);
+	}
 	
-	/*public boolean isNodeLeftChildOfParentNode(TreeNode<E, K> node, TreeNode<E, K> parent ) {
-		return 
-	}*/
+	public void inOrder(TreeNode<E, K> node) {
+		
+		if(node == null) {
+			return;
+		}
+		
+		inOrder(node.getLeftChild());
+		System.out.println(node.getElement());
+		inOrder(node.getRightChild());
+	}
+	
+	private TreeNode<E, K> findSuccessor(TreeNode<E, K> node){
+		
+		TreeNode <E, K> currentNode = node.getRightChild();
+		
+		while(currentNode.getLeftChild() != null) {
+			currentNode = currentNode.getLeftChild();
+		}
+		
+		return currentNode;
+	}
+	
+	private boolean nodeHasRightChildOnly(TreeNode<E, K> node) {
+		return node.getLeftChild() == null 
+				&& node.getRightChild() != null;
+	}
 	
 	
 	
 	
-	public boolean nodeHasLeftChildOnly(TreeNode<E, K> node) {
+	
+	private boolean nodeHasLeftChildOnly(TreeNode<E, K> node) {
 		/*
 		 * How would we know that a give node has a left child
 		 * only. This means that is has no right child?
@@ -326,9 +404,26 @@ implements BinarySearchTreeInterface<E, K>
 
 	@Override
 	public int height() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return height(this.root);
 	}
+	
+	private int height(TreeNode<E, K> node) {
+		
+		if(node == null) {
+			return 0;
+		}
+		
+		int heightOfLeftSubTree = height(node.getLeftChild());
+		
+		int heightOfRightSubTree = height(node.getRightChild());
+		
+		return Math.max(heightOfLeftSubTree, heightOfRightSubTree) + 1;
+	
+	}
+	
+	
+	
 
 	@Override
 	public boolean isBalanced() {
